@@ -28,14 +28,14 @@ def test_adding_user(application):
         #commit is what saves the songs
         db.session.commit()
         assert db.session.query(Song).count() == 2
-        song1 = Song.query.filter_by(title='test').first()
-        assert song1.title == "test"
+        song1 = Song.query.filter_by(amount='test').first()
+        assert song1.amount == "test"
         #changing the title of the song
-        song1.title = "SuperSongTitle"
+        song1.amount = "SuperSongTitle"
         #saving the new title of the song
         db.session.commit()
-        song2 = Song.query.filter_by(title='SuperSongTitle').first()
-        assert song2.title == "SuperSongTitle"
+        song2 = Song.query.filter_by(amount='SuperSongTitle').first()
+        assert song2.amount == "SuperSongTitle"
         #checking cascade delete
         db.session.delete(user)
         assert db.session.query(User).count() == 0
