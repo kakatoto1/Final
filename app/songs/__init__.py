@@ -52,3 +52,10 @@ def songs_upload():
         return render_template('upload.html', form=form)
     except TemplateNotFound:
         abort(404)
+
+def sumUp():
+    with open('transaction.csv', 'rb') as csvfile:
+      reader = csv.reader(csvfile)
+      column = [row['Amount'] for row in reader]
+      total = sum(column)
+    return total
