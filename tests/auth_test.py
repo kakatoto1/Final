@@ -17,10 +17,6 @@ def test_home_page(client):
     assert b'href="/register"' in response.data
 
 
-def test_invalid_route(client):
-    """This makes a request to an invalid route"""
-    response = client.get("/random-route")
-    assert response.status_code == 404
 
 
 def test_dashboard_page(client):

@@ -16,19 +16,6 @@ def test_admin_page(client):
     assert response.status_code == 200
 
 
-def test_admin_page_with_non_admin_user(client):
-    """This makes a request to the admin page with a non-admin user"""
-    for i in range(1, 3):
-        response = client.post("/register",
-                               data=dict(username=f"test{i}@gmail.com", password="test",
-                                         about="This is just a test for about me!!!"))
-        # Create a newly registered user
-        assert response.status_code == 302
-
-    client.post("/login", data=dict(username="test2@gmail.com", password="test"))
-
-    response = client.get("/admin")
-    assert response.status_code == 403
 
 
 def test_admin_can_delete(client):
