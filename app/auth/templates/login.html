@@ -13,11 +13,11 @@
         <div class="col-6">
             <div class="row">
                 <div class="col-12">
-                    <img src="static/images/BankApplication.jpeg" height="750px" width="750px"/>
+                    <img src="static/images/BankApplication.jpeg" height="900px" width="1900px"/>
                 </div>
             </div>
         </div>
-        <div class="col-6 pt-5">
+        <div class="col-4 pt-4">
             <div class="row">
                 <div class="col-12">
                     <form class="card p-3 bg-light" method="POST" action="{{ url_for("auth.login") }}">
@@ -25,7 +25,7 @@
                         {{ form.hidden_tag() }}
                         <div class="row">
                             <div class="mb-3">
-                                <label class="form-label">Username</label>
+                                <label class="form-label"></label>
                                 {{ form.username(class_="form-control", id="username", placeholder="Please enter your username", size=32) }}
                             </div>
                         </div>
@@ -40,7 +40,7 @@
                                 <div class="col">
                                     <a class="btn btn-secondary form-control btn-block"
                                        href="{{ url_for("auth.register") }}"
-                                       role="button">Don't have an account? Register here!</a>
+                                       role="button">Please register here</a>
                                 </div>
                             </div>
                         </div>
