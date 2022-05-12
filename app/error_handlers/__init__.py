@@ -1,7 +1,7 @@
 from flask import render_template
 import flask
 
-error_handlers = flask.Blueprint('error_handlers', __name__)
+error_handlers = flask.Blueprint("error_handlers", __name__)
 
 
 @error_handlers.app_errorhandler(404)

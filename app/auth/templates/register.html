@@ -1,150 +1,47 @@
-{% extends "base.html" %}
-{% block content %}
-    {% from 'bootstrap5/form.html' import render_form, render_field, render_form_row %}
-
-    <div class="row">
-        <div class="col-7">
-            <h2>Register</h2>
-            {{ render_form(form) }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
+<body>
+<div class="container p-3">
+    <form class="card p-3 bg-light" method="POST" action="{{ url_for("auth.register") }}">
+        {{ form.hidden_tag() }}
+        <h1 class="modal-title w-100 text-center" id="exampleModalLabel">Register</h1>
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Username</label>
+            {{ form.username(class_="form-control", type="email") }}
         </div>
-        <div id="message" class="col-5">
-            <div id="letter" class="red">
-                Has lower case letter
-                <div class="progress">
-                    <div id="p-bar" class="progress-bar" style="width: 0%" role="progressbar" aria-valuenow="0"
-                         aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            {{ form.password(class_="form-control", type="password") }}
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">About</label>
+            {{ form.about(
+                        class="form-control", rows="5") }}
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <a class="btn btn-secondary form-control btn-block" href="{{ url_for("auth.login") }}"
+                       role="button">Already have an
+                        account? Log-in here!</a>
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary form-control btn-block">Submit</button>
                 </div>
             </div>
-
         </div>
-    </div>
-    <style>
-        .invalid {
-            color: red;
-        }
-
-        .valid {
-            color: green;
-        }
-    </style>
-
-
-    <script>
-        var passwordField = document.getElementById("password");
-        var letter = document.getElementById("letter");
-        let lowerCase = new Observable(0);
-        let upperCase = new Observable(0);
-        let specialCharacter = new Observable(0);
-        let passwordLength = new Observable(0);
-
-        let id = "p-bar";
-
-        function Observable(v) {
-            this.value = v;
-
-            this.valueChangedCallback = null;
-
-            this.setValue = function (v) {
-                if (this.value !== v) {
-                    this.value = v;
-                    this.raiseChangedEvent(v);
-                }
-            };
-
-            this.getValue = function () {
-                return this.value;
-            };
-
-            this.onChange = function (callback) {
-                this.valueChangedCallback = callback;
-            };
-
-            this.raiseChangedEvent = function (v) {
-                if (this.valueChangedCallback) {
-                    this.valueChangedCallback(v);
-                }
-            };
-        }
-
-        function setProgressBarWidth(id,change) {
-            let progress_bar = document.getElementById(id);
-            let progressBarCurrentWidth_string = progress_bar.style.width.toString()
-            let width_current_value = parseInt(progressBarCurrentWidth_string.substring(0, progressBarCurrentWidth_string.length - 1));
-
-            let width_string_new_value = width_current_value + change;
-            console.log(width_string_new_value);
-            progress_bar.style.width = width_string_new_value.toString().concat("%");
-        }
-
-        lowerCase.onChange(function (v) {
-
-            if(v === 0) {
-                setProgressBarWidth(id,-25)
-            } else {
-                setProgressBarWidth(id,+25)
-            }
-        });
-
-        passwordLength.onChange(function (v) {
-
-            if(v === 0) {
-                setProgressBarWidth(id,-25)
-            } else {
-                setProgressBarWidth(id,+25)
-            }
-        });
-
-        upperCase.onChange(function (v) {
-
-            if(v === 0) {
-                setProgressBarWidth(id,-25)
-            } else {
-                setProgressBarWidth(id,+25)
-            }
-        });
-
-        specialCharacter.onChange(function (v) {
-
-            if(v === 0) {
-                setProgressBarWidth(id,-25)
-            } else {
-                setProgressBarWidth(id,+25)
-            }
-        });
-
-
-        passwordField.onkeyup = function () {
-            // Validate lowercase letters
-            let lowerCaseLetters = /[a-z]/g;
-            let upperCaseLetters = /[A-Z]/g;
-            let specialCharacters = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi;
-            let passwordMinLength = 6;
-
-            if(passwordField.value.length >= passwordMinLength) {
-                passwordLength.setValue(1);
-            } else {
-                passwordLength.setValue(0);
-            }
-
-            if (passwordField.value.match(lowerCaseLetters)) {
-                lowerCase.setValue(1);
-            } else {
-                lowerCase.setValue(0);
-            }
-            if (passwordField.value.match(upperCaseLetters)) {
-                upperCase.setValue(1);
-            } else {
-                upperCase.setValue(0);
-            }
-            if (passwordField.value.match(specialCharacters)) {
-                specialCharacter.setValue(1);
-            } else {
-                specialCharacter.setValue(0);
-            }
-
-        }
-
-
-    </script>
-
-{% endblock %}
+    </form>
+</div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+</body>
+</html>
