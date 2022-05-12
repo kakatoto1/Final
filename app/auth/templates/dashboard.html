@@ -42,7 +42,7 @@
     </div>
 </nav>
 <div>
-    <h1 class="float-end me-5">Balance: ${{ total }}</h1>
+    <h1 class="float-end me-5">Your Current Balance Is: ${{ total }}</h1>
 </div>
 <div class="container p-3">
     {{ render_table(transactions) }}
@@ -54,11 +54,11 @@
     <form method="POST" enctype="multipart/form-data" action="{{ url_for("auth.dashboard") }}">
         {{ form.hidden_tag() }}
         <div class="mb-3">
-            {{ form.file(class_="form-control form-control-sm float-end me-5 bi-cloud-upload", style="width: 300px" ) }}
+            {{ form.file(class_="form-control form-control-sm float-end me-3 bi-cloud-upload", style="width: 600px" ) }}
         </div>
         <div class="mb-3 form-check">
         </div>
-        {{ form.submit(class_="btn btn-primary float-end me-5 bi-cloud-upload", type="submit") }}
+        {{ form.submit(class_="  btn btn-primary float-end me-5 bi-cloud-upload", type="submit") }}
     </form>
 </div>
 <!-- Optional JavaScript -->
