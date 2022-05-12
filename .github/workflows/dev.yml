@@ -1,4 +1,4 @@
-name: Development Workflow
+name: Development Workflow 3.8
 
 on:
   pull_request:
@@ -28,6 +28,6 @@ jobs:
       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "thomasannam-is601-dev"
-          heroku_email: "ta222@njit.edu"
+          heroku_app_name: "is601finaldev" #Must be unique in Heroku
+          heroku_email: "yufanthu@hotmail.com"
           usedocker: true
