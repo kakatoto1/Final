@@ -8314,3 +8314,71 @@ FROM users
 WHERE users.id = ?
 2022-05-08 21:37:44,912 [INFO] sqlalchemy.engine.Engine: [cached since 907.7s ago] (1,)
 2022-05-08 21:37:44,921 [INFO] sqlalchemy.engine.Engine: ROLLBACK
+2022-05-12 20:10:33,157 [INFO] sqlalchemy.engine.Engine: BEGIN (implicit)
+2022-05-12 20:10:33,160 [INFO] sqlalchemy.engine.Engine: SELECT users.is_active AS users_is_active, users.id AS users_id, users.email AS users_email, users.password AS users_password, users.about AS users_about, users.authenticated AS users_authenticated, users.registered_on AS users_registered_on, users.is_admin AS users_is_admin 
+FROM users 
+WHERE users.id = ?
+2022-05-12 20:10:33,160 [INFO] sqlalchemy.engine.Engine: [generated in 0.00052s] (1,)
+2022-05-12 20:10:33,165 [INFO] sqlalchemy.engine.Engine: ROLLBACK
+2022-05-12 20:10:33,183 [INFO] sqlalchemy.engine.Engine: BEGIN (implicit)
+2022-05-12 20:10:33,183 [INFO] sqlalchemy.engine.Engine: SELECT users.is_active AS users_is_active, users.id AS users_id, users.email AS users_email, users.password AS users_password, users.about AS users_about, users.authenticated AS users_authenticated, users.registered_on AS users_registered_on, users.is_admin AS users_is_admin 
+FROM users 
+WHERE users.id = ?
+2022-05-12 20:10:33,183 [INFO] sqlalchemy.engine.Engine: [cached since 0.02386s ago] (1,)
+2022-05-12 20:10:33,364 [INFO] sqlalchemy.engine.Engine: ROLLBACK
+2022-05-12 20:10:37,075 [INFO] sqlalchemy.engine.Engine: BEGIN (implicit)
+2022-05-12 20:10:37,077 [INFO] sqlalchemy.engine.Engine: SELECT songs.id AS songs_id, songs.amount AS songs_amount, songs.type AS songs_type, songs.user_id AS songs_user_id 
+FROM songs
+ LIMIT ? OFFSET ?
+2022-05-12 20:10:37,078 [INFO] sqlalchemy.engine.Engine: [generated in 0.00052s] (1000, 0)
+2022-05-12 20:10:37,087 [INFO] sqlalchemy.engine.Engine: SELECT count(*) AS count_1 
+FROM (SELECT songs.id AS songs_id, songs.amount AS songs_amount, songs.type AS songs_type, songs.user_id AS songs_user_id 
+FROM songs) AS anon_1
+2022-05-12 20:10:37,087 [INFO] sqlalchemy.engine.Engine: [generated in 0.00061s] ()
+2022-05-12 20:10:37,091 [INFO] sqlalchemy.engine.Engine: SELECT users.is_active AS users_is_active, users.id AS users_id, users.email AS users_email, users.password AS users_password, users.about AS users_about, users.authenticated AS users_authenticated, users.registered_on AS users_registered_on, users.is_admin AS users_is_admin 
+FROM users 
+WHERE users.id = ?
+2022-05-12 20:10:37,091 [INFO] sqlalchemy.engine.Engine: [cached since 3.932s ago] (1,)
+2022-05-12 20:10:37,195 [INFO] sqlalchemy.engine.Engine: ROLLBACK
+2022-05-12 20:12:42,903 [INFO] sqlalchemy.engine.Engine: BEGIN (implicit)
+2022-05-12 20:12:42,904 [INFO] sqlalchemy.engine.Engine: SELECT songs.id AS songs_id, songs.amount AS songs_amount, songs.type AS songs_type, songs.user_id AS songs_user_id 
+FROM songs
+ LIMIT ? OFFSET ?
+2022-05-12 20:12:42,905 [INFO] sqlalchemy.engine.Engine: [cached since 125.8s ago] (1000, 0)
+2022-05-12 20:12:42,911 [INFO] sqlalchemy.engine.Engine: SELECT count(*) AS count_1 
+FROM (SELECT songs.id AS songs_id, songs.amount AS songs_amount, songs.type AS songs_type, songs.user_id AS songs_user_id 
+FROM songs) AS anon_1
+2022-05-12 20:12:42,911 [INFO] sqlalchemy.engine.Engine: [cached since 125.8s ago] ()
+2022-05-12 20:12:42,915 [INFO] sqlalchemy.engine.Engine: SELECT users.is_active AS users_is_active, users.id AS users_id, users.email AS users_email, users.password AS users_password, users.about AS users_about, users.authenticated AS users_authenticated, users.registered_on AS users_registered_on, users.is_admin AS users_is_admin 
+FROM users 
+WHERE users.id = ?
+2022-05-12 20:12:42,915 [INFO] sqlalchemy.engine.Engine: [cached since 129.8s ago] (1,)
+2022-05-12 20:12:42,930 [INFO] sqlalchemy.engine.Engine: ROLLBACK
+2022-05-12 20:12:44,176 [INFO] sqlalchemy.engine.Engine: BEGIN (implicit)
+2022-05-12 20:12:44,177 [INFO] sqlalchemy.engine.Engine: SELECT songs.id AS songs_id, songs.amount AS songs_amount, songs.type AS songs_type, songs.user_id AS songs_user_id 
+FROM songs
+ LIMIT ? OFFSET ?
+2022-05-12 20:12:44,177 [INFO] sqlalchemy.engine.Engine: [cached since 127.1s ago] (1000, 0)
+2022-05-12 20:12:44,184 [INFO] sqlalchemy.engine.Engine: SELECT count(*) AS count_1 
+FROM (SELECT songs.id AS songs_id, songs.amount AS songs_amount, songs.type AS songs_type, songs.user_id AS songs_user_id 
+FROM songs) AS anon_1
+2022-05-12 20:12:44,184 [INFO] sqlalchemy.engine.Engine: [cached since 127.1s ago] ()
+2022-05-12 20:12:44,188 [INFO] sqlalchemy.engine.Engine: SELECT users.is_active AS users_is_active, users.id AS users_id, users.email AS users_email, users.password AS users_password, users.about AS users_about, users.authenticated AS users_authenticated, users.registered_on AS users_registered_on, users.is_admin AS users_is_admin 
+FROM users 
+WHERE users.id = ?
+2022-05-12 20:12:44,188 [INFO] sqlalchemy.engine.Engine: [cached since 131s ago] (1,)
+2022-05-12 20:12:44,201 [INFO] sqlalchemy.engine.Engine: ROLLBACK
+2022-05-12 20:12:44,852 [INFO] sqlalchemy.engine.Engine: BEGIN (implicit)
+2022-05-12 20:12:44,853 [INFO] sqlalchemy.engine.Engine: SELECT songs.id AS songs_id, songs.amount AS songs_amount, songs.type AS songs_type, songs.user_id AS songs_user_id 
+FROM songs
+ LIMIT ? OFFSET ?
+2022-05-12 20:12:44,853 [INFO] sqlalchemy.engine.Engine: [cached since 127.8s ago] (1000, 0)
+2022-05-12 20:12:44,860 [INFO] sqlalchemy.engine.Engine: SELECT count(*) AS count_1 
+FROM (SELECT songs.id AS songs_id, songs.amount AS songs_amount, songs.type AS songs_type, songs.user_id AS songs_user_id 
+FROM songs) AS anon_1
+2022-05-12 20:12:44,860 [INFO] sqlalchemy.engine.Engine: [cached since 127.8s ago] ()
+2022-05-12 20:12:44,863 [INFO] sqlalchemy.engine.Engine: SELECT users.is_active AS users_is_active, users.id AS users_id, users.email AS users_email, users.password AS users_password, users.about AS users_about, users.authenticated AS users_authenticated, users.registered_on AS users_registered_on, users.is_admin AS users_is_admin 
+FROM users 
+WHERE users.id = ?
+2022-05-12 20:12:44,863 [INFO] sqlalchemy.engine.Engine: [cached since 131.7s ago] (1,)
+2022-05-12 20:12:44,874 [INFO] sqlalchemy.engine.Engine: ROLLBACK
