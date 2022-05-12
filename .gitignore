@@ -10,3 +10,9 @@ __pycache__
 logs
 uploads
 database
+bin/
+include/
+lib/
+uploads
+logs
+calc.egg-info

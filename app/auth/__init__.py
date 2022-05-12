@@ -1,55 +1,104 @@
-from flask import Blueprint, render_template, redirect, url_for, flash,current_app
-from flask_login import login_user, login_required, logout_user, current_user
-from werkzeug.security import generate_password_hash
+import logging
+import os
+from datetime import datetime
 
-from app.auth.decorators import admin_required
-from app.auth.forms import login_form, register_form, profile_form, security_form, user_edit_form
+from flask import url_for, redirect, Blueprint, render_template, current_app, request
+from flask_login import login_required, current_user, logout_user, login_user
+from werkzeug.utils import secure_filename
+
 from app.db import db
-from app.db.models import User
+from app.db.models import User, Transaction
+from app.forms import RegisterForm, LoginForm, UploadForm
+from app.helpers import read_csv
 
-auth = Blueprint('auth', __name__, template_folder='templates')
+auth = Blueprint("auth", __name__, template_folder="templates")
 
 
-@auth.route('/register', methods=['POST', 'GET'])
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('auth.dashboard'))
-    form = register_form()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user is None:
-            user = User(email=form.email.data, password=generate_password_hash(form.password.data))
-            db.session.add(user)
-            db.session.commit()
-            if user.id == 1:
-                user.is_admin = 1
-                db.session.add(user)
-                db.session.commit()
-            flash('Congratulations, you are now a registered user!', "success")
-            return redirect(url_for('auth.login'), 302)
-        else:
-            flash('Already Registered')
-            return redirect(url_for('auth.login'), 302)
-    return render_template('register.html', form=form)
+@auth.route("/", methods=["GET"])
+def index():
+    users = User.query.all()
+    login_form = LoginForm()
+    return render_template("login.html", form=login_form, users=users)
 
-@auth.route('/login', methods=['POST', 'GET'])
+
+@auth.route("/login", methods=["GET", "POST"])
 def login():
-    form = login_form()
-    if current_user.is_authenticated:
-        return redirect(url_for('auth.dashboard'))
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
-            return redirect(url_for('auth.login'))
-        else:
+    login_form = LoginForm()
+    if login_form.validate_on_submit():
+        user = User.query.filter_by(username=login_form.username.data).first()
+        if user and user.check_password(login_form.password.data):
             user.authenticated = True
             db.session.add(user)
             db.session.commit()
             login_user(user)
-            flash("Welcome", 'success')
-            return redirect(url_for('auth.dashboard'))
-    return render_template('login.html', form=form)
+            return redirect(url_for("auth.dashboard"))
+        return render_template("404.html", username=login_form.username.data)
+
+    return render_template("login.html", form=login_form)
+
+
+@auth.route("/dashboard", methods=["GET", "POST"])
+@login_required
+def dashboard():
+    logger = logging.getLogger("myApp")
+
+    page = request.args.get("page", 1, type=int)
+
+    upload_form = UploadForm()
+
+    if current_user.is_authenticated():
+        user = User.query.filter_by(id=current_user.id).first()
+        if upload_form.validate_on_submit():
+            filename = secure_filename(upload_form.file.data.filename)
+            filepath = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
+            upload_form.file.data.save(filepath)
+            transactions = read_csv(filepath)
+
+            total = user.total
+            for i, transaction in enumerate(transactions):
+                transaction = Transaction(amount=transaction["amount"],
+                                          transaction_type=transaction["transaction_type"])
+                float_amount = float(transaction.amount)
+
+                if float_amount >= 0:
+                    total += float_amount
+                else:
+                    total -= abs(float_amount)
+
+                transaction.user = current_user
+                db.session.add(transaction)
+                logger.info(f"Adding in Transaction {i+1} at {datetime.utcnow()} for user {user.username}")
+
+            user.total = total
+            db.session.add(user)
+            db.session.commit()
+
+        user = User.query.filter_by(id=current_user.id).first()
+        pagination = Transaction.query.filter_by(user_id=user.id).paginate(page, per_page=10)
+        transactions = pagination.items
+
+        return render_template("dashboard.html", username=user.username, transactions=transactions,
+                               form=upload_form, total=user.total, pagination=pagination)
+
+
+@auth.route("/register", methods=["GET", "POST"])
+def register():
+    register_form = RegisterForm()
+
+    if register_form.validate_on_submit():
+        new_user = User(username=register_form.username.data,
+                        password=register_form.password.data,
+                        about=register_form.about.data)
+        db.session.add(new_user)
+        db.session.commit()
+        if new_user.id == 1:
+            new_user.is_admin = True
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for("auth.login"), 302)
+
+    return render_template("register.html", form=register_form)
+
 
 @auth.route("/logout")
 @login_required
@@ -60,117 +109,4 @@ def logout():
     db.session.add(user)
     db.session.commit()
     logout_user()
-    return redirect(url_for('auth.login'))
-
-
-
-@auth.route('/dashboard')
-@login_required
-def dashboard():
-    return render_template('dashboard.html')
-
-
-@auth.route('/profile', methods=['POST', 'GET'])
-def edit_profile():
-    user = User.query.get(current_user.get_id())
-    form = profile_form(obj=user)
-    if form.validate_on_submit():
-        user.about = form.about.data
-        db.session.add(current_user)
-        db.session.commit()
-        flash('You Successfully Updated your Profile', 'success')
-        return redirect(url_for('auth.dashboard'))
-    return render_template('profile_edit.html', form=form)
-
-
-@auth.route('/account', methods=['POST', 'GET'])
-def edit_account():
-    user = User.query.get(current_user.get_id())
-    form = security_form(obj=user)
-    if form.validate_on_submit():
-        user.email = form.email.data
-        user.password = form.password.data
-        db.session.add(current_user)
-        db.session.commit()
-        flash('You Successfully Updated your Password or Email', 'success')
-        return redirect(url_for('auth.dashboard'))
-    return render_template('manage_account.html', form=form)
-
-
-
-#You should probably move these to a new Blueprint to clean this up.  These functions below are for user management
-
-@auth.route('/users')
-@login_required
-@admin_required
-def browse_users():
-    data = User.query.all()
-    titles = [('email', 'Email'), ('registered_on', 'Registered On')]
-    retrieve_url = ('auth.retrieve_user', [('user_id', ':id')])
-    edit_url = ('auth.edit_user', [('user_id', ':id')])
-    add_url = url_for('auth.add_user')
-    delete_url = ('auth.delete_user', [('user_id', ':id')])
-
-    current_app.logger.info("Browse page loading")
-
-    return render_template('browse.html', titles=titles, add_url=add_url, edit_url=edit_url, delete_url=delete_url,
-                           retrieve_url=retrieve_url, data=data, User=User, record_type="Users")
-
-
-@auth.route('/users/<int:user_id>')
-@login_required
-def retrieve_user(user_id):
-    user = User.query.get(user_id)
-    return render_template('profile_view.html', user=user)
-
-
-@auth.route('/users/<int:user_id>/edit', methods=['POST', 'GET'])
-@login_required
-def edit_user(user_id):
-    user = User.query.get(user_id)
-    form = user_edit_form(obj=user)
-    if form.validate_on_submit():
-        user.about = form.about.data
-        user.is_admin = int(form.is_admin.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('User Edited Successfully', 'success')
-        current_app.logger.info("edited a user")
-        return redirect(url_for('auth.browse_users'))
-    return render_template('user_edit.html', form=form)
-
-
-@auth.route('/users/new', methods=['POST', 'GET'])
-@login_required
-def add_user():
-    form = register_form()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user is None:
-            user = User(email=form.email.data, password=generate_password_hash(form.password.data))
-            db.session.add(user)
-            db.session.commit()
-            flash('Congratulations, you just created a user', 'success')
-            return redirect(url_for('auth.browse_users'))
-        else:
-            flash('Already Registered')
-            return redirect(url_for('auth.browse_users'))
-    return render_template('user_new.html', form=form)
-
-
-@auth.route('/users/<int:user_id>/delete', methods=['POST'])
-@login_required
-def delete_user(user_id):
-    user = User.query.get(user_id)
-    if user.id == current_user.id:
-        flash("You can't delete yourself!")
-        return redirect(url_for('auth.browse_users'), 302)
-    db.session.delete(user)
-    db.session.commit()
-    flash('User Deleted', 'success')
-    return redirect(url_for('auth.browse_users'), 302)
-
-
-
-
-
+    return redirect(url_for("auth.login"))
